@@ -1,10 +1,12 @@
 package com.iut.german_marabel.icongame;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Debug;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,26 +50,47 @@ public class GameActivity extends AppCompatActivity {
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-        size.y = size.y - statusBarHeight*2;
-
-        ImageView v1 = getNewIcon(this,rl,100,size);
-
-        v1.setBackgroundColor(Color.BLUE);
-        images.put(0,v1);
+        size.y = size.y - statusBarHeight*4;
 
 
-        v1.setOnClickListener(new View.OnClickListener() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+//        String strUserName = SP.getString("username","");
+//        boolean bHardMode = SP.getBoolean("difficulty",false);
+        String NbIcon = SP.getString("nbIcons","1");
+
+
+        View.OnClickListener succesClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setBackgroundColor(Color.GREEN);
+            }
+        };
+
+        View.OnClickListener failClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.RED);
             }
-        });
+        };
+
+        for (int i = 0 ; i<Integer.parseInt(NbIcon) ; i++)
+        {
+            ImageView v1 = getNewIcon(this,rl,100,size);
+
+            images.put(i,v1);
+            if (i==0)
+            {
+                v1.setBackgroundColor(Color.YELLOW);
+                v1.setOnClickListener(succesClickListener);
+            } else {
+                v1.setBackgroundColor(Color.BLUE);
+                v1.setOnClickListener(failClickListener);
+            }
+
+            rl.addView(v1);
+        }
 
 
-
-
-
-        rl.addView(v1);
 
 
 //        final Handler handler = new Handler();
@@ -89,22 +112,31 @@ public class GameActivity extends AppCompatActivity {
         int maxX = screenSize.x-size;
         int maxY = screenSize.y-size;
         boolean positionNotFound = true;
-        Random r = new Random();
+
         int x = 0;
         int y = 0;
+        int boucle = 0;
         while(positionNotFound)
         {
+            Random r = new Random();
             positionNotFound = false;
             x = r.nextInt(maxX);
             y = r.nextInt(maxY);
             for (int i = 0 ; i < images.size() ; i++)
             {
                 ImageView oneImage = images.get(i);
-                if(oneImage.getX() - x < size || oneImage.getY() - y < size)
+                float t = oneImage.getX();
+                if(Math.abs(oneImage.getX() - x) < size || Math.abs(oneImage.getY() - y) < size)
                 {
                     positionNotFound = true;
                     break;
                 }
+            }
+            boucle++;
+            if(boucle>100)
+            {
+                Log.d(null,"boucle infinie");
+                break;
             }
         }
         v.setX(x);
