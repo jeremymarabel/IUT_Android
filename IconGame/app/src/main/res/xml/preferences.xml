@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference android:title="Votre nom"
+        android:key="username"
+        android:summary="Veuillez renseigner un nom d'utilisateur"></EditTextPreference>
+    <CheckBoxPreference android:title="Mode Difficile"
+        android:defaultValue="false"
+        android:summary="Augmente la difficulté du jeu"
+        android:key="difficulty" />
+    <ListPreference android:title="Nombre d'icones"
+        android:summary="Définis le nombre d'icones en jeu en même temps"
+        android:key="nbIcons"
+        android:defaultValue="1"
+        android:entries="@array/listArray"
+        android:entryValues="@array/listValues" />
+</PreferenceScreen>

@@ -13,14 +13,6 @@
         android:layout_gravity="center"
         android:weightSum="1">
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.37"
-            android:src="@drawable/icon" />
-
         <Button
             android:layout_width="223dp"
             android:layout_height="wrap_content"
