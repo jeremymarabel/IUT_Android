@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -19,11 +23,12 @@ import android.widget.Button;
  */
 public class MenuActivity extends AppCompatActivity {
 
+    private FragmentTabHost mTabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         final Button play = (Button) findViewById(R.id.play);
@@ -48,15 +53,19 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-        //recupération des data de setting exemple
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String strUserName = SP.getString("username","");
-        boolean bHardMode = SP.getBoolean("difficulty",false);
-        String NbIcon = SP.getString("nbIcons","1");
 
-        Log.d("",strUserName);
-        Log.d("",NbIcon);
+        mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+        mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
+        mTabHost.addTab(
+                mTabHost.newTabSpec("dw").setIndicator("Doctor Who", null),
+                FragmentTab.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec("pkm").setIndicator("Pokemon", null),
+                FragmentTab.class, null);
+        mTabHost.addTab(
+                mTabHost.newTabSpec("mlp").setIndicator("MLP", null),
+                FragmentTab.class, null);
 
 
     }
