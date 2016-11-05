@@ -3,6 +3,7 @@ package com.iut.german_marabel.icongame;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,8 @@ public class pkmActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        SharedPreferences pref = getActivity().getPreferences(0);
-        SharedPreferences.Editor edt = pref.edit();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor edt = SP.edit();
         edt.putString("iconMode", "2");
         edt.commit();
 
