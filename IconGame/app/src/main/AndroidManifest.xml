@@ -24,7 +24,10 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".PreferenceActivity" />
-        <activity android:name=".MyPreferenceActivity"></activity>
+        <activity android:name=".MyPreferenceActivity" />
+        <activity android:name=".dwActivity" />
+        <activity android:name=".pkmActivity" />
+        <activity android:name=".mlpActivity"></activity>
     </application>
 
 </manifest>

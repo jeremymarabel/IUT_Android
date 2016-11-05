@@ -3,6 +3,7 @@ package com.iut.german_marabel.icongame;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBar;
@@ -52,20 +53,20 @@ public class MenuActivity extends AppCompatActivity {
                 MenuActivity.this.startActivity(myIntent);
             }
         });
-
-
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
         mTabHost.addTab(
-                mTabHost.newTabSpec("dw").setIndicator("Doctor Who", null),
-                FragmentTab.class, null);
+                mTabHost.newTabSpec("tab1").setIndicator("Doctor Who", null),
+                dwActivity.class, null);
         mTabHost.addTab(
-                mTabHost.newTabSpec("pkm").setIndicator("Pokemon", null),
-                FragmentTab.class, null);
+                mTabHost.newTabSpec("tab2").setIndicator("Pokemon", null),
+                pkmActivity.class, null);
         mTabHost.addTab(
-                mTabHost.newTabSpec("mlp").setIndicator("MLP", null),
-                FragmentTab.class, null);
+                mTabHost.newTabSpec("tab3").setIndicator("MLP", null),
+                mlpActivity.class, null);
+
+
 
 
     }
