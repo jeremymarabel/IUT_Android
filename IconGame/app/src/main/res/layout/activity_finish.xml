@@ -17,7 +17,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/displayNewRecord"
-        android:text="Nouveau Record !"
         android:fontFamily="sans-serif"
         android:textSize="24sp"
         android:textAlignment="center"

@@ -10,7 +10,7 @@
     <ListPreference android:title="Nombre d'icones"
         android:summary="Définis le nombre d'icones en jeu en même temps"
         android:key="nbIcons"
-        android:defaultValue="1"
+        android:defaultValue="3"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues" />
 </PreferenceScreen>

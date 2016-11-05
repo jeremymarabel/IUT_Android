@@ -1,10 +1,13 @@
 package com.iut.german_marabel.icongame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class FinishActivity extends AppCompatActivity {
 
@@ -12,6 +15,30 @@ public class FinishActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
+        String score = "0";
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            score = extras.getString("score");
+        }
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String strUserName = SP.getString("username","");
+        String highScore = SP.getString("highScore", "0");
+
+        TextView top = (TextView)findViewById(R.id.displayNewRecord);
+        if (Integer.parseInt(score) > Integer.parseInt(highScore)){
+            top.setText("Bravo " + strUserName + " ! Nouveau reccord !");
+            SharedPreferences.Editor edt = SP.edit();
+            edt.putInt("highScore",  Integer.parseInt(highScore));
+            edt.commit();
+        }
+        else{
+            top.setText("Pas mal " + strUserName + "... Mais il va falloir s'entrainer !");
+        }
+
+        TextView tscore = (TextView)findViewById(R.id.Score);
+        tscore.setText(Integer.parseInt(score) + " Points !");
 
         final Button playAgain = (Button) findViewById(R.id.playAgain);
         final Button home = (Button) findViewById(R.id.backHome);
@@ -29,4 +56,7 @@ public class FinishActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {}
+
 }
