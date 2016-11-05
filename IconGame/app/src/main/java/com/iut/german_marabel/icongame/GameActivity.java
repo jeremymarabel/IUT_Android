@@ -89,7 +89,7 @@ public class GameActivity extends AppCompatActivity {
                 {
                     progressBar.setProgress(0);
                     Intent myIntent = new Intent(GameActivity.this, FinishActivity.class);
-                    myIntent.putExtra("score", score);
+                    myIntent.putExtra("score", "" + score);
                     GameActivity.this.startActivity(myIntent);
                 }
                 else
