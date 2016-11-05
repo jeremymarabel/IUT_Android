@@ -30,7 +30,7 @@ public class dwActivity extends Fragment {
 
         SharedPreferences pref = getActivity().getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putInt("iconMode", 1);
+        edt.putString("iconMode", "1");
         edt.commit();
 
         View v = inflater.inflate(R.layout.fragment_dw, container, false);

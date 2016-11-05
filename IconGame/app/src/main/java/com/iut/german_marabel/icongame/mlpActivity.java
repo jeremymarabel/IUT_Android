@@ -24,7 +24,7 @@ public class mlpActivity extends Fragment {
 
         SharedPreferences pref = getActivity().getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putInt("iconMode", 3);
+        edt.putString("iconMode", "3");
         edt.commit();
 
         View v = inflater.inflate(R.layout.fragment_mlp, container, false);
