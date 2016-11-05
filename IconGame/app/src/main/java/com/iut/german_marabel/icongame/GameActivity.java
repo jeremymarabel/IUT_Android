@@ -3,7 +3,6 @@ package com.iut.german_marabel.icongame;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -78,7 +77,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                scoreTextView.setText(""+score);
+                scoreTextView.setText(String.format("%d",score));
 
                 Calendar c = Calendar.getInstance();
                 float diff = (c.getTimeInMillis()-lastRefreshTime) / 1000f;
@@ -112,6 +111,12 @@ public class GameActivity extends AppCompatActivity {
 
     public void getAllIcons(Context c)
     {
+        Random r1 = new Random();
+
+        Boolean firstIconIsTrue = r1.nextInt(2) == 0;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String IconSet = SP.getString("iconMode", "2");
+
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.relLayout);
 
         for (int i = 0 ; i < images.size() ; i++)
@@ -166,16 +171,31 @@ public class GameActivity extends AppCompatActivity {
             images.add(i,v1);
             if (i==0)
             {
-//                Drawable mlp =  ContextCompat.getDrawable(this, R.drawable.mlp);
-//                v1.setBackground(mlp);
-//
-                v1.setBackgroundColor(Color.YELLOW);
+
+                Drawable drw =  getDrawable(IconSet,firstIconIsTrue,r1.nextInt(7)+1);
+                v1.setBackground(drw);
                 v1.setOnClickListener(successClickListener);
             } else {
-                v1.setBackgroundColor(Color.BLUE);
+
+                Drawable drw =  getDrawable(IconSet,!firstIconIsTrue,r1.nextInt(7)+1);
+                v1.setBackground(drw);
                 v1.setOnClickListener(failClickListener);
             }
-
+            switch (IconSet)
+            {
+                case "1":
+                    v1.setScaleX(1);
+                    v1.setScaleY(1);
+                    break;
+                case "2":
+                    v1.setScaleX(2);
+                    v1.setScaleY(2);
+                    break;
+                case "3":
+                    v1.setScaleX(1);
+                    v1.setScaleY(1);
+                    break;
+            }
             rl.addView(v1);
         }
     }
@@ -219,6 +239,181 @@ public class GameActivity extends AppCompatActivity {
         v.setMinimumHeight(iconSize);
         v.setMaxHeight(iconSize);
         return v;
+    }
+
+
+    Drawable getDrawable(String setIcon, boolean isFirstSet, int number)
+    {
+        Drawable result = ContextCompat.getDrawable(this, R.drawable.pkm1);
+        if (isFirstSet)
+        {
+            switch (setIcon)
+            {
+                case "1"://drWho
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.dw7);
+                            break;
+                    }
+                    break;
+                case "2"://pkm
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.pkm7);
+                            break;
+                    }
+                    break;
+                case "3"://mlp
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.mlp7);
+                            break;
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            switch (setIcon)
+            {
+                case "1"://drWho
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.dwb7);
+                            break;
+                    }
+                    break;
+                case "2"://pkm
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.epkm7);
+                            break;
+                    }
+                    break;
+                case "3"://mlp
+                    switch (number)
+                    {
+                        case 1:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp1);
+                            break;
+                        case 2:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp2);
+                            break;
+                        case 3:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp3);
+                            break;
+                        case 4:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp4);
+                            break;
+                        case 5:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp5);
+                            break;
+                        case 6:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp6);
+                            break;
+                        case 7:
+                            result = ContextCompat.getDrawable(this, R.drawable.bmlp7);
+                            break;
+                    }
+                    break;
+            }
+        }
+        return result;
     }
 
 
