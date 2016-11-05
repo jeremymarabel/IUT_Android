@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -24,15 +27,17 @@ import java.util.Random;
 public class GameActivity extends AppCompatActivity {
 
 
-    final ArrayList<ImageView> images = new ArrayList<ImageView>();
+    final ArrayList<ImageView> images = new ArrayList<>();
 
 
 
-    final float[] maxTime = {10};
-    //final long startTime = c.getTimeInMillis();
-    final long[] lastRefreshTime = {0};
-    final float[] remainingTime = {10};
-    final int[] NbIcon = {3};
+    private float maxTime = 10;
+    private long lastRefreshTime = 0;
+    private float remainingTime = 10;
+    private int NbIcon = 3;
+    private float addingTime = 2;
+    private double coefficientTime = 0.02;
+    private int score = 0;
 
 
     @Override
@@ -40,10 +45,14 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
+
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        NbIcon[0] = Integer.parseInt(SP.getString("nbIcons","3"));
-        String strUserName = SP.getString("username","");
+        NbIcon = Integer.parseInt(SP.getString("nbIcons","3"));
         boolean bHardMode = SP.getBoolean("difficulty",false);
+        if (bHardMode)
+        {
+            coefficientTime = 0.05;
+        }
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -51,41 +60,52 @@ public class GameActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_game);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        final TextView scoreTextView = (TextView) findViewById(R.id.scoreTextView);
+
 
         progressBar.setProgress(100);
+        scoreTextView.setText("0");
 
         getAllIcons(this);
 
         Calendar c = Calendar.getInstance();
-        lastRefreshTime[0] = c.getTimeInMillis();
+        lastRefreshTime = c.getTimeInMillis();
 
         final Handler handler = new Handler();
         handler.post(new Runnable(){
             @Override
             public void run() {
 
+                scoreTextView.setText(""+score);
+
                 Calendar c = Calendar.getInstance();
-                float diff = (c.getTimeInMillis()-lastRefreshTime[0]) / 1000f;
-                remainingTime[0] = remainingTime[0] - diff;
-                lastRefreshTime[0] = c.getTimeInMillis();
+                float diff = (c.getTimeInMillis()-lastRefreshTime) / 1000f;
+                remainingTime = remainingTime - diff;
+                lastRefreshTime = c.getTimeInMillis();
 
 
-                float progress = 0;
-                if (remainingTime[0] <0)
+                float progress;
+                if (remainingTime <0)
                 {
                     progressBar.setProgress(0);
                     Intent myIntent = new Intent(GameActivity.this, FinishActivity.class);
+                    myIntent.putExtra("score", score);
                     GameActivity.this.startActivity(myIntent);
                 }
                 else
                 {
-                    progress = (remainingTime[0] * 100 / maxTime[0]);
+                    progress = (remainingTime * 100 / maxTime);
                     progressBar.setProgress((int)progress);
                     handler.postDelayed(this,100);
                 }
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        remainingTime = -1;
     }
 
     public void getAllIcons(Context c)
@@ -115,11 +135,13 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GREEN);
-                remainingTime[0] = remainingTime[0] + 2;
-                if (remainingTime[0] > maxTime[0])
+                remainingTime = remainingTime + addingTime;
+                addingTime =(float) (addingTime - addingTime * coefficientTime);
+                if (remainingTime > maxTime)
                 {
-                    maxTime[0] = remainingTime[0];
+                    maxTime = remainingTime;
                 }
+                score = score + 160;
                 getAllIcons(getBaseContext());
             }
         };
@@ -128,14 +150,18 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.RED);
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.vibrate(300);
+                score = score - 33;
+                getAllIcons(getBaseContext());
             }
         };
 
 
 
-        for (int i = 0 ; i<NbIcon[0] ; i++)
+        for (int i = 0 ; i<NbIcon ; i++)
         {
-            ImageView v1 = getNewIcon(c,rl,iconSize,screenSize);
+            ImageView v1 = getNewIcon(c, iconSize, screenSize);
 
             images.add(i,v1);
             if (i==0)
@@ -151,7 +177,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public ImageView getNewIcon(Context c, RelativeLayout rl, int iconSize, Point screenSize)
+    public ImageView getNewIcon(Context c, int iconSize, Point screenSize)
     {
         ImageView v = new ImageView(c);
         int maxX = screenSize.x-iconSize;
@@ -160,7 +186,7 @@ public class GameActivity extends AppCompatActivity {
 
         int x = 0;
         int y = 0;
-        int boucle = 0;
+        int loop = 0;
         while(positionNotFound)
         {
             Random r = new Random();
@@ -176,8 +202,8 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 }
             }
-            boucle++;
-            if(boucle>10000)
+            loop++;
+            if(loop>10000)
             {
                 Log.d("debug","boucle infinie");
                 break;
