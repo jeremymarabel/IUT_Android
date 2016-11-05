@@ -1,5 +1,7 @@
 package com.iut.german_marabel.icongame;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,12 @@ public class mlpActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        SharedPreferences pref = getActivity().getPreferences(0);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putInt("iconMode", 3);
+        edt.commit();
+
         View v = inflater.inflate(R.layout.fragment_mlp, container, false);
         return v;
     }

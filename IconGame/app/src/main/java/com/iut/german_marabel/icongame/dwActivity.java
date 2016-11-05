@@ -1,5 +1,7 @@
 package com.iut.german_marabel.icongame;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -25,6 +27,12 @@ public class dwActivity extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        SharedPreferences pref = getActivity().getPreferences(0);
+        SharedPreferences.Editor edt = pref.edit();
+        edt.putInt("iconMode", 1);
+        edt.commit();
+
         View v = inflater.inflate(R.layout.fragment_dw, container, false);
         return v;
     }

@@ -1,9 +1,11 @@
 package com.iut.german_marabel.icongame;
 
+import android.content.SharedPreferences;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MyPreferenceActivity extends PreferenceActivity {
 

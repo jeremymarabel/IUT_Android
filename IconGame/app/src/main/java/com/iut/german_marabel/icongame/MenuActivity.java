@@ -67,8 +67,6 @@ public class MenuActivity extends AppCompatActivity {
                 mlpActivity.class, null);
 
 
-
-
     }
 
 
