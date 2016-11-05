@@ -27,7 +27,8 @@
         <activity android:name=".MyPreferenceActivity" />
         <activity android:name=".dwActivity" />
         <activity android:name=".pkmActivity" />
-        <activity android:name=".mlpActivity"></activity>
+        <activity android:name=".mlpActivity" />
+        <activity android:name=".FinishActivity"></activity>
     </application>
 
 </manifest>

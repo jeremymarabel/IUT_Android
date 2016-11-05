@@ -38,3 +38,6 @@ captures/
 
 # Keystore files
 *.jks
+*.gradle
+IconGame/build.gradle
+IconGame/gradle.properties
