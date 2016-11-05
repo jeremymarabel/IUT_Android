@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -134,7 +136,6 @@ public class GameActivity extends AppCompatActivity {
         View.OnClickListener successClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setBackgroundColor(Color.GREEN);
                 remainingTime = remainingTime + addingTime;
                 addingTime =(float) (addingTime - addingTime * coefficientTime);
                 if (remainingTime > maxTime)
@@ -149,7 +150,6 @@ public class GameActivity extends AppCompatActivity {
         View.OnClickListener failClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setBackgroundColor(Color.RED);
                 Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 vibrator.vibrate(300);
                 score = score - 33;
@@ -166,6 +166,9 @@ public class GameActivity extends AppCompatActivity {
             images.add(i,v1);
             if (i==0)
             {
+//                Drawable mlp =  ContextCompat.getDrawable(this, R.drawable.mlp);
+//                v1.setBackground(mlp);
+//
                 v1.setBackgroundColor(Color.YELLOW);
                 v1.setOnClickListener(successClickListener);
             } else {
