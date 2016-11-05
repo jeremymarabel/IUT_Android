@@ -1,6 +1,7 @@
 package com.iut.german_marabel.icongame;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -73,6 +74,8 @@ public class GameActivity extends AppCompatActivity {
                 if (remainingTime[0] <0)
                 {
                     progressBar.setProgress(0);
+                    Intent myIntent = new Intent(GameActivity.this, FinishActivity.class);
+                    GameActivity.this.startActivity(myIntent);
                 }
                 else
                 {
@@ -108,7 +111,7 @@ public class GameActivity extends AppCompatActivity {
         int iconSize = (int)(Math.min(screenSize.x, screenSize.y) * 0.10);
 
 
-        View.OnClickListener succesClickListener = new View.OnClickListener() {
+        View.OnClickListener successClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GREEN);
@@ -138,7 +141,7 @@ public class GameActivity extends AppCompatActivity {
             if (i==0)
             {
                 v1.setBackgroundColor(Color.YELLOW);
-                v1.setOnClickListener(succesClickListener);
+                v1.setOnClickListener(successClickListener);
             } else {
                 v1.setBackgroundColor(Color.BLUE);
                 v1.setOnClickListener(failClickListener);
