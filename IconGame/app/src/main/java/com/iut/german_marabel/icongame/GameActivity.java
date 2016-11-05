@@ -184,8 +184,8 @@ public class GameActivity extends AppCompatActivity {
             switch (IconSet)
             {
                 case "1":
-                    v1.setScaleX(1);
-                    v1.setScaleY(1);
+                    v1.setScaleX(0.75f);
+                    v1.setScaleY(0.75f);
                     break;
                 case "2":
                     v1.setScaleX(2);
