@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Debug;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,59 +16,108 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
 
     final ArrayList<ImageView> images = new ArrayList<ImageView>();
 
-    int nbIcons = 5;
+
+
+    final float[] maxTime = {10};
+    //final long startTime = c.getTimeInMillis();
+    final long[] lastRefreshTime = {0};
+    final float[] remainingTime = {10};
+    final int[] NbIcon = {3};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_game);
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        NbIcon[0] = Integer.parseInt(SP.getString("nbIcons","3"));
+        String strUserName = SP.getString("username","");
+        boolean bHardMode = SP.getBoolean("difficulty",false);
 
-        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relLayout);
+        //Remove notification bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setContentView(R.layout.activity_game);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
+        progressBar.setProgress(100);
 
+        getAllIcons(this);
+
+        Calendar c = Calendar.getInstance();
+        lastRefreshTime[0] = c.getTimeInMillis();
+
+        final Handler handler = new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+
+                Calendar c = Calendar.getInstance();
+                float diff = (c.getTimeInMillis()-lastRefreshTime[0]) / 1000f;
+                remainingTime[0] = remainingTime[0] - diff;
+                lastRefreshTime[0] = c.getTimeInMillis();
+
+
+                float progress = 0;
+                if (remainingTime[0] <0)
+                {
+                    progressBar.setProgress(0);
+                }
+                else
+                {
+                    progress = (remainingTime[0] * 100 / maxTime[0]);
+                    progressBar.setProgress((int)progress);
+                    handler.postDelayed(this,100);
+                }
+            }
+        });
+
+    }
+
+    public void getAllIcons(Context c)
+    {
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.relLayout);
+
+        for (int i = 0 ; i < images.size() ; i++)
+        {
+            rl.removeView(images.get(i));
+        }
+        images.clear();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point screenSize = new Point();
+        display.getSize(screenSize);
         int statusBarHeight = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);
         }
-        size.y = size.y - statusBarHeight*4;
+        screenSize.y = screenSize.y - statusBarHeight*4;
 
-
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-//        String strUserName = SP.getString("username","");
-//        boolean bHardMode = SP.getBoolean("difficulty",false);
-        String NbIcon = SP.getString("nbIcons","3");
+        int iconSize = (int)(Math.min(screenSize.x, screenSize.y) * 0.10);
 
 
         View.OnClickListener succesClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setBackgroundColor(Color.GREEN);
+                remainingTime[0] = remainingTime[0] + 2;
+                if (remainingTime[0] > maxTime[0])
+                {
+                    maxTime[0] = remainingTime[0];
+                }
+                getAllIcons(getBaseContext());
             }
         };
 
@@ -81,11 +128,11 @@ public class GameActivity extends AppCompatActivity {
             }
         };
 
-        int iconSize = (int)(Math.min(size.x,size.y)*0.15);
 
-        for (int i = 0 ; i<Integer.parseInt(NbIcon) ; i++)
+
+        for (int i = 0 ; i<NbIcon[0] ; i++)
         {
-            ImageView v1 = getNewIcon(this,rl,iconSize,size);
+            ImageView v1 = getNewIcon(c,rl,iconSize,screenSize);
 
             images.add(i,v1);
             if (i==0)
@@ -99,55 +146,13 @@ public class GameActivity extends AppCompatActivity {
 
             rl.addView(v1);
         }
-
-
-        progressBar.setProgress(100);
-        final long maxTime = 10*1000;
-        Calendar c = Calendar.getInstance();
-        final long startTime = c.getTimeInMillis();
-
-
-
-
-        final Handler handler = new Handler();
-        handler.post(new Runnable(){
-            @Override
-            public void run() {
-                Calendar c = Calendar.getInstance();
-                long timeEllapsed = c.getTimeInMillis()-startTime;
-                long remainingTime = maxTime - timeEllapsed;
-
-                
-
-                long progress = 0;
-                if (remainingTime<0)
-                {
-                    progressBar.setProgress((int)progress);
-                }
-                else
-                {
-                    progress = (remainingTime*100/maxTime);
-                    progressBar.setProgress((int)progress);
-                    handler.postDelayed(this,1);
-                }
-
-
-
-
-//                View v2 = images.get(0);
-//                v2.setLeft(v2.getLeft()+6);
-//                v2.setRight(v2.getRight()+6);
-
-            }
-        });
-
     }
 
-    public ImageView getNewIcon(Context c, RelativeLayout rl, int size, Point screenSize)
+    public ImageView getNewIcon(Context c, RelativeLayout rl, int iconSize, Point screenSize)
     {
         ImageView v = new ImageView(c);
-        int maxX = screenSize.x-size;
-        int maxY = screenSize.y-size;
+        int maxX = screenSize.x-iconSize;
+        int maxY = screenSize.y-iconSize;
         boolean positionNotFound = true;
 
         int x = 0;
@@ -162,15 +167,14 @@ public class GameActivity extends AppCompatActivity {
             for (int i = 0 ; i < images.size() ; i++)
             {
                 ImageView oneImage = images.get(i);
-                float t = oneImage.getX();
-                if(Math.abs(oneImage.getX() - x) < size || Math.abs(oneImage.getY() - y) < size)
+                if(Math.abs(oneImage.getX() - x) < iconSize || Math.abs(oneImage.getY() - y) < iconSize)
                 {
                     positionNotFound = true;
                     break;
                 }
             }
             boucle++;
-            if(boucle>100)
+            if(boucle>10000)
             {
                 Log.d("debug","boucle infinie");
                 break;
@@ -178,10 +182,10 @@ public class GameActivity extends AppCompatActivity {
         }
         v.setX(x);
         v.setY(y);
-        v.setMinimumWidth(size);
-        v.setMaxWidth(size);
-        v.setMinimumHeight(size);
-        v.setMaxHeight(size);
+        v.setMinimumWidth(iconSize);
+        v.setMaxWidth(iconSize);
+        v.setMinimumHeight(iconSize);
+        v.setMaxHeight(iconSize);
         return v;
     }
 
