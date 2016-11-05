@@ -56,18 +56,10 @@
             android:layout_height="wrap_content"
             android:text="Préférences"
             android:id="@+id/option"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_horizontal|bottom"
             android:layout_weight="0.08"
             android:onClick="sendMessage"/>
 
-        <Button
-            android:layout_width="223dp"
-            android:layout_height="wrap_content"
-            android:text="Leaderboard"
-            android:id="@+id/score"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.08"
-            android:onClick="sendMessage"/>
 
     </LinearLayout>
 

@@ -34,7 +34,6 @@ public class MenuActivity extends AppCompatActivity {
 
         final Button play = (Button) findViewById(R.id.play);
         final Button option = (Button) findViewById(R.id.option);
-        final Button score = (Button) findViewById(R.id.score);
         play.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MenuActivity.this, GameActivity.class);
@@ -44,12 +43,6 @@ public class MenuActivity extends AppCompatActivity {
         option.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MenuActivity.this, MyPreferenceActivity.class);
-                MenuActivity.this.startActivity(myIntent);
-            }
-        });
-        score.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MenuActivity.this, GameActivity.class);
                 MenuActivity.this.startActivity(myIntent);
             }
         });
