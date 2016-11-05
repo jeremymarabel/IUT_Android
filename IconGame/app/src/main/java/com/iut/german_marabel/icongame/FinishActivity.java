@@ -26,11 +26,12 @@ public class FinishActivity extends AppCompatActivity {
         SharedPreferences.Editor edt = SP.edit();
 
         String strUserName = SP.getString("username","");
-        int highScore = SP.getInt("highScore", 0);
+
+
         TextView top = (TextView)findViewById(R.id.displayNewRecord);
-        if (Integer.parseInt(score) > highScore){
+        if (Integer.parseInt(score) > SP.getInt("highScore", 0)){
             top.setText("Bravo " + strUserName + " ! Nouveau reccord !");
-            edt.putInt("highScore",  highScore);
+            edt.putInt("highScore",  Integer.parseInt(score));
             edt.commit();
         }
         else{
