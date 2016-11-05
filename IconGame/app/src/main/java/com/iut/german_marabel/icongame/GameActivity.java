@@ -16,16 +16,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.Console;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
 
-    final HashMap<Integer,ImageView> images = new HashMap<Integer,ImageView>();
+
+    final ArrayList<ImageView> images = new ArrayList<ImageView>();
 
     int nbIcons = 5;
 
@@ -40,6 +47,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.relLayout);
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -56,7 +64,7 @@ public class GameActivity extends AppCompatActivity {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 //        String strUserName = SP.getString("username","");
 //        boolean bHardMode = SP.getBoolean("difficulty",false);
-        String NbIcon = SP.getString("nbIcons","1");
+        String NbIcon = SP.getString("nbIcons","3");
 
 
         View.OnClickListener succesClickListener = new View.OnClickListener() {
@@ -73,11 +81,13 @@ public class GameActivity extends AppCompatActivity {
             }
         };
 
+        int iconSize = (int)(Math.min(size.x,size.y)*0.15);
+
         for (int i = 0 ; i<Integer.parseInt(NbIcon) ; i++)
         {
-            ImageView v1 = getNewIcon(this,rl,100,size);
+            ImageView v1 = getNewIcon(this,rl,iconSize,size);
 
-            images.put(i,v1);
+            images.add(i,v1);
             if (i==0)
             {
                 v1.setBackgroundColor(Color.YELLOW);
@@ -91,18 +101,45 @@ public class GameActivity extends AppCompatActivity {
         }
 
 
+        progressBar.setProgress(100);
+        final long maxTime = 10*1000;
+        Calendar c = Calendar.getInstance();
+        final long startTime = c.getTimeInMillis();
 
 
-//        final Handler handler = new Handler();
-//        handler.post(new Runnable(){
-//            @Override
-//            public void run() {
+
+
+        final Handler handler = new Handler();
+        handler.post(new Runnable(){
+            @Override
+            public void run() {
+                Calendar c = Calendar.getInstance();
+                long timeEllapsed = c.getTimeInMillis()-startTime;
+                long remainingTime = maxTime - timeEllapsed;
+
+                
+
+                long progress = 0;
+                if (remainingTime<0)
+                {
+                    progressBar.setProgress((int)progress);
+                }
+                else
+                {
+                    progress = (remainingTime*100/maxTime);
+                    progressBar.setProgress((int)progress);
+                    handler.postDelayed(this,1);
+                }
+
+
+
+
 //                View v2 = images.get(0);
 //                v2.setLeft(v2.getLeft()+6);
 //                v2.setRight(v2.getRight()+6);
-//                handler.postDelayed(this,1);
-//            }
-//        });
+
+            }
+        });
 
     }
 
@@ -135,7 +172,7 @@ public class GameActivity extends AppCompatActivity {
             boucle++;
             if(boucle>100)
             {
-                Log.d(null,"boucle infinie");
+                Log.d("debug","boucle infinie");
                 break;
             }
         }
