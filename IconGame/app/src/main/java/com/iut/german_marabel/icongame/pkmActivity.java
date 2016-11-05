@@ -24,7 +24,7 @@ public class pkmActivity extends Fragment {
 
         SharedPreferences pref = getActivity().getPreferences(0);
         SharedPreferences.Editor edt = pref.edit();
-        edt.putInt("iconMode", 2);
+        edt.putString("iconMode", "2");
         edt.commit();
 
         View v = inflater.inflate(R.layout.fragment_pkm, container, false);
