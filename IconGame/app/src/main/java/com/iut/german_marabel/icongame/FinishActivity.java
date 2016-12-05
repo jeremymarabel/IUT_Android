@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class FinishActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +22,7 @@ public class FinishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish);
         String score = "0";
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -245,6 +249,29 @@ public class FinishActivity extends AppCompatActivity {
 
         }
 
+
+        //-----
+        Realm realm = Realm.getInstance(this);
+        realm.beginTransaction();
+
+        Score bddScore = realm.createObject(Score.class);
+        bddScore.setScore(Integer.parseInt(score));
+
+        realm.copyToRealmOrUpdate(bddScore);
+        //realm.createOrUpdate(bddScore);
+
+        RealmResults<Score> result = realm.where(Score.class)
+                .findAll();
+
+        Log.d(null, "Realm result");
+        for(Score sc : result)
+        {
+            Log.d(null, "=" + sc);
+        }
+
+        realm.commitTransaction();
+        realm.close();
+        //-----
 
         final Button playAgain = (Button) findViewById(R.id.playAgain);
         final Button home = (Button) findViewById(R.id.backHome);
