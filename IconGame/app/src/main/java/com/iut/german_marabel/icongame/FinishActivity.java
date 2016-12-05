@@ -35,8 +35,32 @@ public class FinishActivity extends AppCompatActivity {
         String strUserName = SP.getString("username","");
 
 
+
+        // ---------------- test de realm --------
+        /* rendu commun pour GERMAN - MARABEL - DE ROBERT - PAROUX - MENNELLA
+        *  car le projet de DE ROBERT - PAROUX - MENNELLA
+        * n'était pas fonctionnel pour travailler sur ce TP
+        */
+
+        Realm realm = Realm.getInstance(this);
+        realm.beginTransaction();
+
+        Score bddScore = realm.createObject(Score.class);
+        bddScore.setScore(Integer.parseInt(score));
+
+        realm.copyToRealmOrUpdate(bddScore);
+
+        int result = realm.where(Score.class).max("score").intValue();
+
+        Log.d(null, "Realm result");
+        int ScoreMAx = 0;
+
+        realm.commitTransaction();
+        realm.close();
+
+
         TextView top = (TextView)findViewById(R.id.displayNewRecord);
-        if (Integer.parseInt(score) > SP.getInt("highScore", 0)){
+        if (Integer.parseInt(score) == result){
             top.setText("Bravo " + strUserName + " ! Nouveau reccord !");
             edt.putInt("highScore",  Integer.parseInt(score));
             edt.commit();
@@ -44,6 +68,7 @@ public class FinishActivity extends AppCompatActivity {
         else{
             top.setText("Pas mal " + strUserName + "... Mais il va falloir s'entrainer !");
         }
+        // --------- fin du test de realm --------
 
         TextView tscore = (TextView)findViewById(R.id.Score);
         tscore.setText(Integer.parseInt(score) + " Points !");
@@ -249,29 +274,6 @@ public class FinishActivity extends AppCompatActivity {
 
         }
 
-
-        //-----
-        Realm realm = Realm.getInstance(this);
-        realm.beginTransaction();
-
-        Score bddScore = realm.createObject(Score.class);
-        bddScore.setScore(Integer.parseInt(score));
-
-        realm.copyToRealmOrUpdate(bddScore);
-        //realm.createOrUpdate(bddScore);
-
-        RealmResults<Score> result = realm.where(Score.class)
-                .findAll();
-
-        Log.d(null, "Realm result");
-        for(Score sc : result)
-        {
-            Log.d(null, "=" + sc);
-        }
-
-        realm.commitTransaction();
-        realm.close();
-        //-----
 
         final Button playAgain = (Button) findViewById(R.id.playAgain);
         final Button home = (Button) findViewById(R.id.backHome);
